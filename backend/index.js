@@ -1,6 +1,7 @@
 import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config()
 import colors from 'colors'
 import morgan from 'morgan'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
@@ -15,11 +16,11 @@ import bodyParser from 'body-parser'
 import  sendMail  from './config/mailgun.js'
 
 
+
 const app = express()
 connectDB()
 
-
-
+console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }

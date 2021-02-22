@@ -6,10 +6,10 @@ const newsLetter = (req,res)=>{
 
     const {email} = req.body;
     if(email){
-      
       subscribeToNewsLetter(email)
       .then(result =>{
-        return res.status(201);
+        console.log(result);
+        res.status(201);
       })
       .catch(err =>{
         return res.status(400);

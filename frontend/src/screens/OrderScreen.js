@@ -82,9 +82,6 @@ const OrderScreen = ({ match, history }) => {
       "order_id": data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       "handler": function (response){
           console.log("res",response);
-          alert(response.razorpay_payment_id);
-          alert(response.razorpay_order_id);
-          alert(response.razorpay_signature);
           const paymentResult = {
             payment_id: response.razorpay_payment_id,
             order_id: response.razorpay_order_id,

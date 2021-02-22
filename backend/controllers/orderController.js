@@ -42,11 +42,14 @@ const addOrderItems = asyncHandler(async (req, res) => {
     throw new Error('No order items')
     return
   } else {
-    Order.findOne({user: _id,isPaid: false}).exec(async (error,o)=>{
+    Order.findOne({user: _id,isPaid: false}).exec( (error,o)=>{
+      console.log('re');
       if(error){
+        console.log('err');
         return createOrder(orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
       }
       if (o){
+        console.log('su');
         Order.findOneAndUpdate({_id: o._id},{
           orderItems: orderItemsv,
           user: req.user._id,
@@ -63,11 +66,12 @@ const addOrderItems = asyncHandler(async (req, res) => {
         }
         ).exec((error,order)=>{
           if(error) return res.status(400)
-          return res.status(201).json(order);
+          if(order) return res.status(201).json(order);
         })
+      }else{
+        createOrder(orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
       }
     })
-    return createOrder(orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
   }
 })
 
