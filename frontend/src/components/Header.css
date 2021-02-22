@@ -1,0 +1,13 @@
+header{
+    background-color: #603813;
+    
+    
+}
+.headerLinks > a{
+    color: #FFC905 !important;
+    font-size: 1rem;
+}
+.nav-item > a{
+    color: #FFC905 !important;
+    font-size: 1rem;
+}

@@ -1,0 +1,55 @@
+{
+  "name": "ecomm",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devkahar/mern-ecomm.git"
+  },
+  "keywords": [
+    "Mern",
+    "Ecommerce",
+    "Project"
+  ],
+  "author": "Dev Kahar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Devkahar/mern-ecomm/issues"
+  },
+  "homepage": "https://github.com/Devkahar/mern-ecomm#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "jsonwebtoken": "^8.5.1",
+    "mailchimp": "^1.2.1",
+    "mailchimp-api-v3": "^1.14.0",
+    "mailgun-js": "^0.22.0",
+    "mongoose": "^5.11.17",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.18",
+    "nodemailer-mailgun-transport": "^2.0.2",
+    "razorpay": "^2.0.6",
+    "request": "^2.88.2",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0",
+    "nodemon": "^2.0.7"
+  },
+  "description": ""
+}
