@@ -3,6 +3,7 @@ main {
 }
 
 h3 {
+  font-size: 1rem;
   padding: 1rem 0;
 }
 
@@ -14,12 +15,22 @@ h1 {
 h2 {
   font-size: 1.4rem;
   padding: 0.5rem 0;
+  
 }
-
+h1,h2,h3,h4,h5,h6{
+  text-transform: capitalize;
+}
 .rating span {
   margin: 0.1rem;
 }
-
+.MuiDialog-paperWidthSm{
+  width: 900px;
+}
+.MuiFormControl-root{
+  width: 100%;
+  margin-top: 30px !important;
+  
+}
 /* carousel */
 .carousel-item-next,
 .carousel-item-prev,
@@ -45,6 +56,25 @@ h2 {
 }
 .carousel a {
   margin: 0 auto;
+}
+
+.box{
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 1px 1px 0 rgb(60 64 67 / 8%), 0 1px 3px 1px rgb(60 64 67 / 10%);
+  border-radius: 2px;
+  margin-bottom: 30px;
+}
+.flex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.secondaryHeading{
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+  font-weight: bold;
 }
 @media (max-width: 900px) {
   .carousel-caption h2 {

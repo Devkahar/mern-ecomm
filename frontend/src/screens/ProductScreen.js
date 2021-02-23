@@ -11,11 +11,26 @@ import {
   createProductReview,
 } from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
-
+import { addToCart } from '../actions/cartActions'
+import SnakeBar from '../components/Snakebar'
 const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
+  const [open, setOpen] = React.useState(false);
+  const [message,setMessage] = useState('Add To Cart SuccessFull');
+  const [severity,setSeverity] = useState('success');
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const dispatch = useDispatch()
 
@@ -44,7 +59,8 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match, successProductReview])
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`)
+    dispatch(addToCart(match.params.id, qty))
+    handleClick()
   }
 
   const submitHandler = (e) => {
@@ -59,6 +75,7 @@ const ProductScreen = ({ history, match }) => {
 
   return (
     <>
+      <SnakeBar open={open} handleClose={handleClose} message={message} severity={severity} />
       <Link className='btn btn-light my-3' to='/'>
         Go Back
       </Link>
@@ -220,5 +237,4 @@ const ProductScreen = ({ history, match }) => {
     </>
   )
 }
-
 export default ProductScreen
