@@ -18,7 +18,14 @@ const CouponCode = (props) => {
     return (
         <>
             <ListGroup.Item className="box coupon flex" onClick={handleClickOpen}>
+                {props.isValid === ''?
+                <>
+
                 <span>Apply Coupon Code</span> <span><ChevronRightIcon/></span>
+                </>
+                : props.isValid === 'success'? <span className="text-success">Coupon Applied</span>
+                :<span className="text-danger">Invalid Coupon</span>
+                }
             </ListGroup.Item>
             <Modals
                 title={'Apply Coupoun'}

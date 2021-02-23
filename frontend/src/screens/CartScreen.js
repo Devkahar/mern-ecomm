@@ -5,8 +5,6 @@ import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../actions/cartActions'
 
-import Modals from "../components/Modals";
-import Checkbox from '@material-ui/core/Checkbox';
 import GiftWrapper from '../components/GiftWrapper'
 import CouponCode from '../components/CouponCode'
 import { TextField } from '@material-ui/core'
@@ -21,8 +19,17 @@ const CartScreen = ({ match, location, history }) => {
   const [recipientName, setRecipientName] = useState('');  
   const [senderName, setSenderName] = useState('');  
   const [message, setMessage] = useState('');  
-
-  const cart = useSelector((state) => state.cart)
+  const [content,setContent] = useState(false);
+  const cart = useSelector((state) => state.cart);
+  const [checked, setChecked] = React.useState(false);
+  const [validCoupon,setValidCoupon] = useState('');
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    if(!checked){
+      giftPackRejectHandler();
+      setContent(false)
+    }
+  };
   const { cartItems } = cart
   const [price,setPrice] = useState(0);
   const [discount,setDiscount] = useState(0);
@@ -43,6 +50,18 @@ const CartScreen = ({ match, location, history }) => {
       setShipping(50)
     }
   },[cartItems,price])
+
+  useEffect(()=>{
+    if(recipientName !=='' && senderName !=='' && message !==''){
+      if(!content){
+        setChecked(true)
+        setContent(true);
+      }
+    }else{
+      setChecked(false)
+      setContent(false)
+    }
+  },[recipientName,senderName,message,checked])
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))
   }
@@ -52,11 +71,15 @@ const CartScreen = ({ match, location, history }) => {
   }
   const couponHandler =()=>{
     console.log(coupon);
+    setValidCoupon('success');
   }
   const giftPackHandler = ()=>{
-    
-    console.log(recipientName);
-    
+    console.log(recipientName); 
+  }
+  const giftPackRejectHandler = ()=>{
+    setRecipientName('');
+    setSenderName('');
+    setMessage('');
   }
   return (
     <>    
@@ -82,7 +105,7 @@ const CartScreen = ({ match, location, history }) => {
                   <Col md={2}>
                     <Form.Control
                       style={{
-                        padding: '0.75rem 1rem'
+                        padding: '0.75rem 0.8rem'
                       }}
                       as='select'
                       value={item.qty}
@@ -118,6 +141,7 @@ const CartScreen = ({ match, location, history }) => {
         
           <ListGroup variant='flush'>
             <CouponCode
+            isValid={validCoupon}
             submitHandler={couponHandler}
             >
             <input
@@ -129,7 +153,11 @@ const CartScreen = ({ match, location, history }) => {
             />
             </CouponCode>
             <GiftWrapper
+            content={content}
             submitHandler={giftPackHandler}
+            checked={checked}
+            handleChange={handleChange}
+            rejectHandler={giftPackRejectHandler}
             >
             <p>Your personalised message will be printed on a card & sent with your gift.</p>
             <TextField 
@@ -190,6 +218,9 @@ const CartScreen = ({ match, location, history }) => {
                 className='btn-block'
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
+                style={{
+                  backgroundColor: '#4fcf64',
+                }}
               >
                 Proceed To Checkout
               </Button>
