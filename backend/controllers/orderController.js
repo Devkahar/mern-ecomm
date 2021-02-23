@@ -14,9 +14,15 @@ const addOrderItems = asyncHandler(async (req, res) => {
     itemsPrice,
     taxPrice,
     shippingPrice,
-    totalPrice,
-  } = req.body
+  } = req.body;
+  let { giftWrap,coupon} = req.body; 
   console.log("order items",orderItems);
+  if(!giftWrap){
+    giftWrap.isWrap = false;
+  }
+  if(coupon){
+    
+  }
   const createOrder = async (orderItems,user,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPrice)=>{
     const order = new Order({
       orderItems,

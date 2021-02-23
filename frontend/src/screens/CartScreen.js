@@ -18,7 +18,7 @@ const CartScreen = ({ match, location, history }) => {
   const [coupon, setCoupon] = useState('');  
   const [recipientName, setRecipientName] = useState('');  
   const [senderName, setSenderName] = useState('');  
-  const [message, setMessage] = useState('');  
+  const [message, setMessage] = useState('');
   const [content,setContent] = useState(false);
   const cart = useSelector((state) => state.cart);
   const [checked, setChecked] = React.useState(false);
@@ -31,9 +31,12 @@ const CartScreen = ({ match, location, history }) => {
     }
   };
   const { cartItems } = cart
+  console.log(cartItems);
   const [price,setPrice] = useState(0);
+  const [formalPrice,setFormalPrice] = useState(0);
   const [discount,setDiscount] = useState(0);
   const [shipping,setShipping] = useState(0);
+  const [totalPrice,setTotalPrice] = useState(0);
   useEffect(() => {
     if(productId){
       dispatch(addToCart(productId, qty))
@@ -43,13 +46,17 @@ const CartScreen = ({ match, location, history }) => {
     setPrice(cartItems
       .reduce((acc, item) => acc + item.qty * item.price, 0)
       .toFixed(2));
-    setDiscount(price);
+    setFormalPrice(cartItems
+      .reduce((acc, item) => acc + item.qty * item.formalPrice, 0)
+      .toFixed(2))
+    setDiscount(formalPrice-price);
     if(price >500){
       setShipping(0)
     }else{
       setShipping(50)
     }
-  },[cartItems,price])
+    setTotalPrice(price+shipping);
+  },[cartItems,price,formalPrice]);
 
   useEffect(()=>{
     if(recipientName !=='' && senderName !=='' && message !==''){
@@ -187,7 +194,7 @@ const CartScreen = ({ match, location, history }) => {
               <div className="flex mt-3">
                 <span>MRP value</span>
                 <span>
-                ₹ {(price *2).toFixed(2)}
+                ₹ {formalPrice}
                 </span>
               </div>
               
@@ -209,7 +216,7 @@ const CartScreen = ({ match, location, history }) => {
               <hr/>
               <div className="flex">
               <h3 className="secondaryHeading">Total Payable Amount</h3>
-              <span>₹ {price}</span>
+              <span>₹ {totalPrice.toString().split('.')[0]}</span>
               </div>
             </ListGroup.Item>
             

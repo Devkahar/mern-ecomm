@@ -14,6 +14,7 @@ const ProductEditScreen = ({ match, history }) => {
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
+  const [formalPrice,setFormalPrice] = useState(0)
   const [image, setImage] = useState('')
   const [brand, setBrand] = useState('')
   const [category, setCategory] = useState('')
@@ -43,6 +44,7 @@ const ProductEditScreen = ({ match, history }) => {
       } else {
         setName(product.name)
         setPrice(product.price)
+        setFormalPrice(product.formalPrice)
         setImage(product.image)
         setBrand(product.brand)
         setCategory(product.category)
@@ -57,7 +59,6 @@ const ProductEditScreen = ({ match, history }) => {
     const formData = new FormData()
     formData.append('image', file)
     setUploading(true)
-
     try {
       const config = {
         headers: {
@@ -82,6 +83,7 @@ const ProductEditScreen = ({ match, history }) => {
         _id: productId,
         name,
         price,
+        formalPrice,
         image,
         brand,
         category,
@@ -123,6 +125,15 @@ const ProductEditScreen = ({ match, history }) => {
                 placeholder='Enter price'
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId='formalPrice'>
+              <Form.Label>Formal Price</Form.Label>
+              <Form.Control
+                type='number'
+                placeholder='Enter price'
+                value={formalPrice}
+                onChange={(e) => setFormalPrice(e.target.value)}
               ></Form.Control>
             </Form.Group>
 

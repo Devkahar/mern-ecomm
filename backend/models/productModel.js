@@ -49,6 +49,9 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    brand:{
+      type: String,
+    },
     numReviews: {
       type: Number,
       required: true,
@@ -59,6 +62,12 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    formalPrice: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
     countInStock: {
       type: Number,
       required: true,

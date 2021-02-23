@@ -13,6 +13,7 @@ const orderSchema = mongoose.Schema(
         qty: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
+        
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
@@ -67,6 +68,20 @@ const orderSchema = mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    giftWrap:{
+      isWrap: {type: Boolean},
+      senderName: {type: String},
+      reciverName: {type: String},
+      messageName: {type: String}
+    },
+    coupon:{
+      isCoupon: {type: Boolean},
+      couponID: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Coupoun',
+      }
+    }
   },
   {
     timestamps: true,

@@ -1,3 +1,6 @@
+body{
+  color: black !important;
+}
 main {
   min-height: 80vh;
 }
@@ -72,6 +75,12 @@ h1,h2,h3,h4,h5,h6{
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.formalPrice{
+  color: lightgrey;
+  letter-spacing: normal;
+  text-decoration: line-through;
+  font-size: 0.8rem;
 }
 .secondaryHeading{
   font-size: 1.2rem;
