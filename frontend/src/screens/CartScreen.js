@@ -145,7 +145,8 @@ const CartScreen = ({ match, location, history }) => {
         )}
       </Col>
       <Col md={5}>
-        
+          {cartItems.length > 0 ? (
+
           <ListGroup variant='flush'>
             <CouponCode
             isValid={validCoupon}
@@ -232,6 +233,7 @@ const CartScreen = ({ match, location, history }) => {
                 Proceed To Checkout
               </Button>
           </ListGroup>
+          ):null}
         
       </Col>
     </Row>

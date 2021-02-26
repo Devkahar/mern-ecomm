@@ -5,7 +5,6 @@ import Coupon from '../models/CouponModel';
 // @access  Private
 const addCoupon = async(req,res)=>{
     const {
-        _id,
         couponCode,
         discount,
         limit,
@@ -14,7 +13,7 @@ const addCoupon = async(req,res)=>{
 
     try {
         const createCoupon = new Coupon({
-            user: _id,
+            user: req.user._id,
             couponCode,
             discount,
             limit,
@@ -61,7 +60,7 @@ const verifyCoupon = (req,res) =>{
 }
 
 // @desc    Coupon List
-// @route   GET /api/coupon/list
+// @route   POST /api/coupon/list
 // @access  Private
 const couponList = (req,res) =>{
     Coupon.find({}).populate('user','id name').exec((error,couponList) =>{
@@ -79,9 +78,10 @@ const deleteCoupon = async(req,res) =>{
         const result = await Coupon.deleteOne({_id})
         if(result) res.status(204).json({message: "Coupon Deleted SuccessFully"})
     } catch (error) {
-        return res.status(500).json({message: error});
+        return res.status(400).json({message: error});
     }
 }
+
 // @desc    add Coupon
 // @route   PUT /api/coupon/:id
 // @access  Private
@@ -103,11 +103,25 @@ const updateCoupon = async (req,res) =>{
            const updateCoupon = await result.save();
            res.status(200).json({updateCoupon});
         }else{
-            res.status(404)
+            res.status(400)
         }
         
     } catch (error) {
-        res.status(404)
+        res.status(400)
+    }
+}
+
+// @desc    add Coupon
+// @route   POST /api/coupon/:id
+// @access  Private
+const couponDetails = async (req,res) =>{
+    const _id = req.params.id;
+    try {
+        const result = await Coupon.findById({_id});
+        res.status(200).json({couponDetails: result});
+        
+    } catch (error) {
+        res.status(400).json({error})
     }
 }
 export{
@@ -115,5 +129,6 @@ export{
     verifyCoupon,
     couponList,
     deleteCoupon,
-    updateCoupon
+    updateCoupon,
+    couponDetails,
 }

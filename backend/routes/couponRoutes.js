@@ -6,7 +6,8 @@ import {
     verifyCoupon,
     couponList,
     deleteCoupon,
-    updateCoupon
+    updateCoupon,
+    couponDetails
 } from '../controllers/couponController.js';
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -15,5 +16,6 @@ router.route.post('/verify',verifyCoupon)
 router.route.get('/list',protect,admin,couponList)
 router
     .route('/:id')
+    .post(protect,admin,couponDetails)
     .delete(protect,admin,deleteCoupon)
     .put(protect,admin,updateCoupon)

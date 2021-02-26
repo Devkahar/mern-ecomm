@@ -29,6 +29,14 @@ import {
   orderListReducer,
 } from './reducers/orderReducers'
 
+import {
+  couponVerifyReducer,
+  couponAddReducer,
+  couponListReducer,
+  couponUpdateReducer,
+  couponDetailsReducer,
+  couponDeleteReducer
+} from './reducers/couponReducers'
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -51,6 +59,12 @@ const reducer = combineReducers({
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  couponVerify: couponVerifyReducer,
+  couponAdd: couponAddReducer,
+  couponList: couponListReducer,
+  couponUpdate: couponUpdateReducer,
+  couponDetails: couponDetailsReducer,
+  couponDelete: couponDeleteReducer,
 })
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
@@ -81,4 +95,4 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(...middleware))
 )
 
-export default store
+export default store;
