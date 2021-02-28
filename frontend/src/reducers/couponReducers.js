@@ -11,12 +11,14 @@ import {
     COUPON_CREATE_REQUEST,
     COUPON_CREATE_SUCCESS,
     COUPON_CREATE_FAIL,
+    COUPON_CREATE_RESET,
     COUPON_VERIFY_REQUEST,
     COUPON_VERIFY_SUCCESS,
     COUPON_VERIFY_FAIL,
     COUPON_UPDATE_REQUEST,
     COUPON_UPDATE_SUCCESS,
-    COUPON_UPDATE_FAIL
+    COUPON_UPDATE_FAIL,
+    COUPON_UPDATE_RESET
 } from '../constants/couponConstants';
 
 
@@ -63,7 +65,8 @@ export const couponAddReducer = (state ={}, action) =>{
                 loading : false,
                 error: action.payload,
             }
-
+        case COUPON_CREATE_RESET:
+            return {}
         default:
             return state;
     }
@@ -77,7 +80,7 @@ export const couponListReducer = (state ={}, action) =>{
 
         case COUPON_LIST_SUCCESS:
             return {
-                couponList: action.payload,
+                list: action.payload,
                 loading : false,
             }
 
@@ -100,14 +103,15 @@ export const couponUpdateReducer = (state ={}, action) =>{
         case COUPON_UPDATE_SUCCESS:
             return {
                 loading : false,
-                couponUpdate: action.payload,
+                success: action.payload,
             }
         case COUPON_UPDATE_FAIL:
             return {
                 loading : false,
-                couponUpdateFail: action.payload,
+                error: action.payload,
             }        
-
+        case COUPON_UPDATE_RESET:
+            return {}
         default:
             return state;
     }
@@ -122,7 +126,7 @@ export const couponDetailsReducer = (state ={}, action) =>{
         case COUPON_DETAILS_SUCCESS:
             return {
                 loading : false,
-                couponDetails: action.payload,
+                couponDetails: {...action.payload},
             }
         
         case COUPON_DETAILS_FAIL:
@@ -145,7 +149,7 @@ export const couponDeleteReducer = (state ={}, action) =>{
         case COUPON_DELETE_SUCCESS:
             return {
                 loading: false,
-                couponDelete: action.payload,
+                success: action.payload,
             }
         case COUPON_DELETE_FAIL:
             return {

@@ -20,7 +20,7 @@ import {
   COUPON_UPDATE_FAIL
 } from '../constants/couponConstants';
 import { logout } from './userActions'
-const addCoupon = (couponCode,discount,limit,valid) => async (dispatch,getState) => {
+const addCoupon = () => async (dispatch,getState) => {
     try{
 
         dispatch({
@@ -36,10 +36,10 @@ const addCoupon = (couponCode,discount,limit,valid) => async (dispatch,getState)
                 Authorization: `Bearer ${userInfo.token}`,
             },
         }
-        const {data} = await axios.post('api/coupon/addcoupon',{couponCode,discount,limit,valid},config);        
+        const {data} = await axios.post('/api/coupon/addcoupon',{},config);        
         dispatch({
             type: COUPON_CREATE_SUCCESS,
-            payload: result.data
+            payload: data
             
         })
     } catch (error) {
@@ -93,14 +93,14 @@ const couponList = () => async (dispatch,getState) =>{
         const{
             userLogin: { userInfo },
         } = getState()
-      
+        
         const config = {
             headers: {
-                Authorization: `Bearer ${userInfo.token}`,
+              Authorization: `Bearer ${userInfo.token}`,
             },
         }
-
-        const {data} = await axios.post('/api/coupon/list',config);
+        console.log(config);
+        const {data} = await axios.post('/api/coupon/list',{},config);
         dispatch({
             type: COUPON_LIST_SUCCESS,
             payload: data
@@ -171,6 +171,7 @@ const updateCoupon = (id,couponCode,discount,limit,valid) => async (dispatch,get
         }
 
         const {data} = await axios.put(`/api/coupon/${id}`,{couponCode,discount,limit,valid},config);
+        console.log(data);
         dispatch({
             type: COUPON_UPDATE_SUCCESS,
             payload: data
@@ -189,7 +190,7 @@ const updateCoupon = (id,couponCode,discount,limit,valid) => async (dispatch,get
         })
     }
 }
-const updateCoupon = (id) => async (dispatch,getState) =>{
+const couponDetails = (id) => async (dispatch,getState) =>{
     try {
         dispatch({
             type: COUPON_DETAILS_REQUEST
@@ -205,7 +206,7 @@ const updateCoupon = (id) => async (dispatch,getState) =>{
             },
         }
 
-        const {data} = await axios.put(`/api/coupon/${id}`,config);
+        const {data} = await axios.post(`/api/coupon/${id}`,{},config);
         dispatch({
             type: COUPON_DETAILS_SUCCESS,
             payload: data
@@ -223,4 +224,13 @@ const updateCoupon = (id) => async (dispatch,getState) =>{
         payload: message,
         })
     }
+}
+
+export {
+    addCoupon,
+    verifyCoupon,
+    couponDetails,
+    updateCoupon,
+    deleteCoupon,
+    couponList
 }

@@ -10,6 +10,7 @@ import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import couponRoutes from './routes/couponRoutes.js'
 import serviceRoutes from './routes/service.js'
 import crypto from 'crypto'
 import bodyParser from 'body-parser'
@@ -36,7 +37,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
-
+app.use('/api/coupon',couponRoutes)
 app.post('/verification',(req,res)=>{
   const secret = '12345678';
   console.log(JSON.stringify(req.body));

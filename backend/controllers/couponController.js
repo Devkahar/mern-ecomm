@@ -1,24 +1,18 @@
-import Coupon from '../models/CouponModel';
+import Coupon from '../models/CouponModel.js';
 
 // @desc    add Coupon
 // @route   POST /api/coupon/addcoupon
 // @access  Private
 const addCoupon = async(req,res)=>{
-    const {
-        couponCode,
-        discount,
-        limit,
-        valid,
-    } = req.body;
-
     try {
         const createCoupon = new Coupon({
             user: req.user._id,
-            couponCode,
-            discount,
-            limit,
-            valid,
-        })
+            couponCode: 'discount%num',
+            discount: '20',
+            limit: '999',
+            valid: true,
+            couponUsed: 0,
+        });
         const coupon = await createCoupon.save();
         if(coupon) return res.status(201).json({message:'coupon created',coupon});
     } catch (error) {
@@ -64,7 +58,7 @@ const verifyCoupon = (req,res) =>{
 // @access  Private
 const couponList = (req,res) =>{
     Coupon.find({}).populate('user','id name').exec((error,couponList) =>{
-        if(error) return res.status(500);
+        if(error) return res.status(400).json({message: 'Empty Coupon List'});
         if(couponList) return res.status(200).json({couponList})
     })
 }

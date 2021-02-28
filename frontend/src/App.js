@@ -19,6 +19,8 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import { useSelector } from 'react-redux'
+import CouponListScreen from './screens/CouponListScreen'
+import CouponScreen from './screens/CouponScreen'
 
 const App = () => {
   const login = useSelector(state => state.userLogin);
@@ -50,7 +52,9 @@ const App = () => {
             exact
           />
           <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
+          <Route path='/admin/coupon/:id/edit' component={CouponScreen} />
           <Route path='/admin/orderlist' component={OrderListScreen} />
+          <Route path='/admin/couponList' component={CouponListScreen} />
           <Route path='/search/:keyword' component={HomeScreen} exact />
           <Route path='/page/:pageNumber' component={HomeScreen} exact />
           <Route
