@@ -3,7 +3,7 @@
 
 # production
 /frontend/build
-/upload
+/uploads
 # misc
 .DS_Store
 .env

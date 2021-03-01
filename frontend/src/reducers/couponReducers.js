@@ -19,7 +19,8 @@ import {
     COUPON_UPDATE_REQUEST,
     COUPON_UPDATE_SUCCESS,
     COUPON_UPDATE_FAIL,
-    COUPON_UPDATE_RESET
+    COUPON_UPDATE_RESET,
+    ADD_GIFT_WRAPPER
 } from '../constants/couponConstants';
 
 
@@ -161,6 +162,17 @@ export const couponDeleteReducer = (state ={}, action) =>{
                 error: action.payload,
             }        
 
+        default:
+            return state;
+    }
+}
+
+export const addGiftCardReducer = (state ={}, action) =>{
+    switch(action.type){
+        case ADD_GIFT_WRAPPER:
+            return {
+                giftCard: action.payload,
+            }
         default:
             return state;
     }

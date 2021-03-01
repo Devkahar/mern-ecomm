@@ -1,13 +1,15 @@
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
 import Product from '../models/productModel.js'
-
+import Coupon from '../models/CouponModel.js'
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
     _id,
+    coupon,
+    giftWrapper,
     orderItems,
     shippingAddress,
     paymentMethod,
@@ -15,16 +17,48 @@ const addOrderItems = asyncHandler(async (req, res) => {
     taxPrice,
     shippingPrice,
   } = req.body;
-  let { giftWrap,coupon} = req.body; 
+
   console.log("order items",orderItems);
-  if(!giftWrap){
-    giftWrap.isWrap = false;
+  let giftWrap;
+  let wrapPrice =0;
+  giftWrap = {
+    isWrap: giftWrapper.giftCard.checked,
   }
+  if(giftWrapper.giftCard.checked){
+    giftWrap = {
+      ...giftWrap,
+      ...giftWrapper.giftCard.details,
+    }
+    wrapPrice =75;
+  }
+
+  console.log(giftWrap);
+  let _coupon;
+  let couponDiscount = 0;
+  console.log(coupon.success.couponDetails._id);
   if(coupon){
-    
+    try {
+      _coupon = {
+        isCoupon: true,
+        couponID: coupon.success.couponDetails._id,
+      }
+      const coupond = await Coupon.findById({_id: _coupon.couponID});
+      if(coupond){
+        couponDiscount = coupond.discount;
+      }
+      
+    } catch (error) {
+      throw new Error('No Coupon Exist');
+    }
+  }else{
+    _coupon = {
+      isCoupon: false,
+    }
   }
-  const createOrder = async (orderItems,user,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPrice)=>{
+  const createOrder = async (giftWrap,coupon,orderItems,user,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPrice)=>{
     const order = new Order({
+      giftWrap,
+      coupon,
       orderItems,
       user: req.user._id,
       shippingAddress,
@@ -32,7 +66,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       itemsPrice,
       taxPrice,
       shippingPrice,
-      totalPrice: totalPricev,
+      totalPrice,
     })
     const createdOrder = await order.save();
     return res.status(201).json(createdOrder)
@@ -42,7 +76,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     const product = await Product.findById(e.product);
     orderItemsv[index].price = product.price;
   })
-  let totalPricev = orderItemsv.reduce((acc, item) => acc + item.price * item.qty, 0)
+  let totalPricev = orderItemsv.reduce((acc, item) => acc + item.price * item.qty, 0) * ((100-couponDiscount)/100)+wrapPrice;
   if (orderItems && orderItems.length === 0) {
     res.status(400)
     throw new Error('No order items')
@@ -52,11 +86,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
       console.log('re');
       if(error){
         console.log('err');
-        return createOrder(orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
+        return createOrder(giftWrap,_coupon,orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
       }
       if (o){
         console.log('su');
         Order.findOneAndUpdate({_id: o._id},{
+          giftWrap,
+          coupon: _coupon,
           orderItems: orderItemsv,
           user: req.user._id,
           shippingAddress,
@@ -75,7 +111,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
           if(order) return res.status(201).json(order);
         })
       }else{
-        createOrder(orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
+        createOrder(giftWrap,_coupon,orderItemsv,req.user._id,shippingAddress,paymentMethod,itemsPrice,taxPrice,shippingPrice,totalPricev);
       }
     })
   }

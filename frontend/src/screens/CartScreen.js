@@ -9,7 +9,7 @@ import GiftWrapper from '../components/GiftWrapper'
 import CouponCode from '../components/CouponCode'
 import { TextField } from '@material-ui/core'
 import { verifyCoupon } from '../actions/couponActions'
-import { COUPON_VERIFY_REST } from '../constants/couponConstants'
+import { COUPON_VERIFY_REST,ADD_GIFT_WRAPPER } from '../constants/couponConstants'
 const CartScreen = ({ match, location, history }) => {
   const productId = match.params.id
 
@@ -104,6 +104,15 @@ const CartScreen = ({ match, location, history }) => {
   }
 
   const checkoutHandler = () => {
+    if(checked){
+      dispatch({ type: ADD_GIFT_WRAPPER, payload:{checked,details:{
+        recipientName,
+        senderName,
+        message,
+      }}})
+    }else{
+      dispatch({ type: ADD_GIFT_WRAPPER, payload:{checked}})
+    }
     history.push('/login?redirect=shipping')
   }
   const couponHandler =()=>{
@@ -119,63 +128,82 @@ const CartScreen = ({ match, location, history }) => {
     setMessage('');
   }
   const removeCouponHandler = ()=>{
+    
     dispatch({type: COUPON_VERIFY_REST})
   }
   return (
     <>    
     <Row className="mt-5 gy-5">
-      <Col md={7} className="box">
-        <h1>Product IN Your Cart</h1>
+      <Col md={7}>
+        <div className="box">
+          <h1>Product In Your Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
             Your cart is empty <Link to='/'>Go Back</Link>
           </Message>
         ) : (
-          <ListGroup variant='flush' className="bo">
+          <ListGroup variant='flush'>
             {cartItems.map((item) => (
               <ListGroup.Item key={item.product}>
-                <Row>
-                  <Col md={2}>
-                    <Image src={item.image} alt={item.name} fluid rounded />
-                  </Col>
-                  <Col md={3}>
-                    <Link to={`/product/${item.product}`}>{item.name}</Link>
-                  </Col>
-                  <Col md={2}>Rs.{item.price}</Col>
-                  <Col md={2}>
-                    <Form.Control
-                      style={{
-                        padding: '0.75rem 0.8rem'
-                      }}
-                      as='select'
-                      value={item.qty}
-                      onChange={(e) =>
-                        dispatch(
-                          addToCart(item.product, Number(e.target.value))
-                        )
-                      }
-                    >
-                      {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </Form.Control>
-                  </Col>
-                  <Col md={2}>
-                    <Button
-                      type='button'
-                      variant='light'
-                      onClick={() => removeFromCartHandler(item.product)}
-                    >
-                      <i className='fas fa-trash'></i>
-                    </Button>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
+                <div className="d-flex">
+                  <div className="d-flex justify-content-start" style={{flex: "0.2"}}>
+                    <Image src={item.image} alt={item.name} fluid rounded style={{
+                      maxWidth: '80px'
+                    }} />
+                  </div>
+                  <div className="d-flex flex-column justify-content-between" style={{flex: "0.8"}}>
+                  
+                    <div className="d-flex justify-content-between">
+                      <Link to={`/product/${item.product}`}>{item.name}</Link>
+                      <div className="d-flex  justify-content-end align-items-top">
+                        <Button
+                          type='button'
+                          variant='light'
+                          onClick={() => removeFromCartHandler(item.product)}
+                        >
+                          <i className='fas fa-trash'></i>
+                        </Button>
+                      </div>
+                      
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Form.Control
+                          style={{
+                            padding: '0.75rem 0.8rem',
+                            width: '70px'
+                          }}
+                          as='select'
+                          value={item.qty}
+                          onChange={(e) =>
+                            dispatch(
+                              addToCart(item.product, Number(e.target.value))
+                            )
+                          }
+                        >
+                          {[...Array(item.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      <div className="d-flex align-items-center">
+                        <p className="formalPrice">
+                        <strong>MRP</strong> <span className="lineTrough">₹{item.formalPrice}</span>
+                        </p>
+                        <p className="price">
+                          <strong>
+                         ₹{item.price}
+                          </strong>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </ListGroup.Item>
             ))}
           </ListGroup>
         )}
+        </div>
       </Col>
       <Col md={5}>
           {cartItems.length > 0 ? (
@@ -268,12 +296,13 @@ const CartScreen = ({ match, location, history }) => {
                 <hr/>
                 <div className="flex">
                   <h3 className="text-success">Coupon Discount:</h3>
-                  <span className="text-danger">-{success?.couponDetails.discount}% (₹ {((success?.couponDetails.discount/100)*totalPrice).toFixed(2)})</span>
+                  <span className="text-danger">-{success?.couponDetails.discount}% (₹ {((success?.couponDetails.discount/100)*totalPrice)})</span>
                 </div>
                 <div className="flex">
                   <h3 className={`secondaryHeading`}>Total Amount</h3>
-                  <span className={`${validCoupon ==='success'? 'priceCut':''}`}>₹ {((1-(success?.couponDetails.discount/100))*totalPrice).toFixed(2)}</span>
+                  <span className={`${validCoupon ==='success'? 'priceCut':''}`}>₹ {((1-(success?.couponDetails.discount/100))*totalPrice+wrapPrice)}</span>
                 </div>
+                {checked && <div className="text-danger">Note:- Coupon is applied only on Product not on gift wrapper</div>}
               </>
               :null}
             </ListGroup.Item>
@@ -286,6 +315,7 @@ const CartScreen = ({ match, location, history }) => {
                 style={{
                   backgroundColor: '#4fcf64',
                 }}
+                className="btm-fixed"
               >
                 Proceed To Checkout
               </Button>

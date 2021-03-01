@@ -24,15 +24,16 @@ const GiftWrapper = (props) => {
       }
     return (
         <>
-            <ListGroup.Item className="box coupon flex">
-            <div>
+            <ListGroup.Item className="box coupon flex fl-res">
+            <div className="">
             <span><Checkbox
               defaultChecked
               color="primary"
               checked={props.checked}
               onChange={props.handleChange}
               inputProps={{ 'aria-label': 'secondary checkbox' }}
-            /></span>
+            />
+            </span>
             <span>Gift Wrapper For ₹ 75</span>
             
             </div>

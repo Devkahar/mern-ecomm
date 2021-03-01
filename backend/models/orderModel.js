@@ -69,16 +69,15 @@ const orderSchema = mongoose.Schema(
       type: Date,
     },
     giftWrap:{
-      isWrap: {type: Boolean},
+      isWrap: {type: Boolean, required: true},
       senderName: {type: String},
-      reciverName: {type: String},
-      messageName: {type: String}
+      recipientName: {type: String},
+      message: {type: String}
     },
     coupon:{
       isCoupon: {type: Boolean},
       couponID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'Coupoun',
       }
     }

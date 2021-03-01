@@ -12,10 +12,12 @@ const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch()
 
   const cart = useSelector((state) => state.cart)
+  const coupon = useSelector((state) => state.couponVerify);
+  const giftWrapper = useSelector((state) => state.giftWrapper);
 
   if (!cart.shippingAddress.address) {
     history.push('/shipping')
-  } else if (!cart.paymentMethod) {
+  } else if (!cart.paymentMethod){
     history.push('/payment')
   }
   //   Calculate prices
@@ -47,8 +49,11 @@ const PlaceOrderScreen = ({ history }) => {
   }, [history, success])
 
   const placeOrderHandler = () => {
+    console.log("coupon",coupon,"wrapper",giftWrapper);
     dispatch(
       createOrder({
+        coupon,
+        giftWrapper,
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
