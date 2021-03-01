@@ -21,7 +21,7 @@ export default function FormDialog(props) {
           <Button variant="contained" onClick={props.submitHandler} color="primary">
             {props.btnText}
           </Button>
-          {/* <CircularProgress /> */}
+          
         </DialogActions>
         </DialogContent>
       </Dialog>

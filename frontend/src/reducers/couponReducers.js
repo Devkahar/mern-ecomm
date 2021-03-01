@@ -14,6 +14,7 @@ import {
     COUPON_CREATE_RESET,
     COUPON_VERIFY_REQUEST,
     COUPON_VERIFY_SUCCESS,
+    COUPON_VERIFY_REST,
     COUPON_VERIFY_FAIL,
     COUPON_UPDATE_REQUEST,
     COUPON_UPDATE_SUCCESS,
@@ -40,6 +41,9 @@ export const couponVerifyReducer = (state ={},action) =>{
                 loading: false,
                 error: action.payload,
             }
+        
+        case COUPON_VERIFY_REST:
+            return {}
         
         default:
             return state;

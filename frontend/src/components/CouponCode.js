@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import { ListGroup } from 'react-bootstrap';
 import Modals from "./Modals"
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { CircularProgress } from '@material-ui/core';
+import CancelIcon from '@material-ui/icons/Cancel';
 const CouponCode = (props) => {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
+      if(props.isValid !== 'success'){
         setOpen(true);
-      };
+      }
+    };
       const handleClose = () => {
         setOpen(false);
       };
@@ -18,12 +22,21 @@ const CouponCode = (props) => {
     return (
         <>
             <ListGroup.Item className="box coupon flex" onClick={handleClickOpen}>
-                {props.isValid === ''?
+                {
+                  props.loading ?<><span>Apply Coupon Code</span> <span><CircularProgress /></span></> 
+                  :
+                  props.isValid === ''?
                 <>
-
                 <span>Apply Coupon Code</span> <span><ChevronRightIcon/></span>
                 </>
-                : props.isValid === 'success'? <span className="text-success">Coupon Applied</span>
+                : props.isValid === 'success'? <><span className="text-success">Coupon Applied &nbsp;
+                 <span className="text-danger"><strong>"{props.code}"</strong></span>
+                </span>
+                
+                  <div style={{ color: 'red'}} onClick={props.removeCoupon}>
+                  <CancelIcon/>
+                  </div>
+                </>
                 :<span className="text-danger">Invalid Coupon</span>
                 }
             </ListGroup.Item>

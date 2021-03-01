@@ -63,8 +63,8 @@ const verifyCoupon = (couponCode) => async dispatch =>{
             type: COUPON_VERIFY_REQUEST, 
         });
 
-        const {data} = await axios.post('/api/coupon/verify',couponCode);
-        
+        const {data} = await axios.post(`/api/coupon/verify/${couponCode}`);
+        console.log(data);
         dispatch({
             type: COUPON_VERIFY_SUCCESS,
             payload: data

@@ -8,35 +8,45 @@ import { addToCart, removeFromCart } from '../actions/cartActions'
 import GiftWrapper from '../components/GiftWrapper'
 import CouponCode from '../components/CouponCode'
 import { TextField } from '@material-ui/core'
+import { verifyCoupon } from '../actions/couponActions'
+import { COUPON_VERIFY_REST } from '../constants/couponConstants'
 const CartScreen = ({ match, location, history }) => {
   const productId = match.params.id
 
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
   const dispatch = useDispatch()
-  const [open, setOpen] = useState(false);
-  const [coupon, setCoupon] = useState('');  
+  const [wrapPrice,setWrapPrice] = useState(0);
+  const [coupon, setCoupon] = useState('');
   const [recipientName, setRecipientName] = useState('');  
   const [senderName, setSenderName] = useState('');  
   const [message, setMessage] = useState('');
   const [content,setContent] = useState(false);
-  const cart = useSelector((state) => state.cart);
+  
   const [checked, setChecked] = React.useState(false);
   const [validCoupon,setValidCoupon] = useState('');
   const handleChange = (event) => {
     setChecked(event.target.checked);
     if(!checked){
+      console.log("Exec");
       giftPackRejectHandler();
       setContent(false)
     }
   };
+
+  const cart = useSelector((state) => state.cart);
   const { cartItems } = cart
   console.log(cartItems);
+
+  const couponVerify = useSelector((state) => state.couponVerify);
+  const {loading,success,error} = couponVerify;
+  console.log(couponVerify);
   const [price,setPrice] = useState(0);
   const [formalPrice,setFormalPrice] = useState(0);
   const [discount,setDiscount] = useState(0);
   const [shipping,setShipping] = useState(0);
   const [totalPrice,setTotalPrice] = useState(0);
+  console.log("checked",checked);
   useEffect(() => {
     if(productId){
       dispatch(addToCart(productId, qty))
@@ -45,10 +55,10 @@ const CartScreen = ({ match, location, history }) => {
   useEffect(()=>{
     setPrice(cartItems
       .reduce((acc, item) => acc + item.qty * item.price, 0)
-      .toFixed(2));
+      );
     setFormalPrice(cartItems
       .reduce((acc, item) => acc + item.qty * item.formalPrice, 0)
-      .toFixed(2))
+      )
     setDiscount(formalPrice-price);
     if(price >500){
       setShipping(0)
@@ -56,8 +66,16 @@ const CartScreen = ({ match, location, history }) => {
       setShipping(50)
     }
     setTotalPrice(price+shipping);
-  },[cartItems,price,formalPrice]);
+    console.log("wrapp",wrapPrice);
+  },[cartItems,price,formalPrice,totalPrice]);
 
+  useEffect(() => {
+    if(checked){
+      setWrapPrice(75);
+    }else{
+      setWrapPrice(0);
+    }
+  },[checked,wrapPrice])
   useEffect(()=>{
     if(recipientName !=='' && senderName !=='' && message !==''){
       if(!content){
@@ -69,6 +87,18 @@ const CartScreen = ({ match, location, history }) => {
       setContent(false)
     }
   },[recipientName,senderName,message,checked])
+  
+  useEffect(()=>{
+    if(success){
+      setValidCoupon('success');
+    }
+    else if(error){
+      setValidCoupon('failure');
+    }else{
+      setValidCoupon('');
+    }
+
+  },[success,error]);
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))
   }
@@ -77,8 +107,8 @@ const CartScreen = ({ match, location, history }) => {
     history.push('/login?redirect=shipping')
   }
   const couponHandler =()=>{
-    console.log(coupon);
-    setValidCoupon('success');
+    dispatch(verifyCoupon(coupon))
+    setCoupon('');
   }
   const giftPackHandler = ()=>{
     console.log(recipientName); 
@@ -87,6 +117,9 @@ const CartScreen = ({ match, location, history }) => {
     setRecipientName('');
     setSenderName('');
     setMessage('');
+  }
+  const removeCouponHandler = ()=>{
+    dispatch({type: COUPON_VERIFY_REST})
   }
   return (
     <>    
@@ -149,6 +182,9 @@ const CartScreen = ({ match, location, history }) => {
 
           <ListGroup variant='flush'>
             <CouponCode
+            removeCoupon={removeCouponHandler}
+            code={success?.couponDetails.couponCode}
+            loading={loading}
             isValid={validCoupon}
             submitHandler={couponHandler}
             >
@@ -214,11 +250,32 @@ const CartScreen = ({ match, location, history }) => {
                 ₹ {shipping}
                 </span>
               </div>
+              {checked && (
+                <div className="flex mt-3">
+                <span>(+) Gift Wrapper </span>
+                <span>
+                ₹ {wrapPrice}
+                </span>
+              </div>
+              )}
               <hr/>
               <div className="flex">
-              <h3 className="secondaryHeading">Total Payable Amount</h3>
-              <span>₹ {totalPrice.toString().split('.')[0]}</span>
+                <h3 className={`secondaryHeading ${validCoupon ==='success'? 'priceCut':''}`}>Total Payable Amount</h3>
+                <span className={`${validCoupon ==='success'? 'priceCut':''}`}>₹ {totalPrice+wrapPrice}</span>
               </div>
+              {validCoupon==='success'?
+              <>
+                <hr/>
+                <div className="flex">
+                  <h3 className="text-success">Coupon Discount:</h3>
+                  <span className="text-danger">-{success?.couponDetails.discount}% (₹ {((success?.couponDetails.discount/100)*totalPrice).toFixed(2)})</span>
+                </div>
+                <div className="flex">
+                  <h3 className={`secondaryHeading`}>Total Amount</h3>
+                  <span className={`${validCoupon ==='success'? 'priceCut':''}`}>₹ {((1-(success?.couponDetails.discount/100))*totalPrice).toFixed(2)}</span>
+                </div>
+              </>
+              :null}
             </ListGroup.Item>
             
               <Button

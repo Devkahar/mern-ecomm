@@ -12,7 +12,7 @@ import {
 import { protect, admin } from '../middleware/authMiddleware.js'
 
 router.route('/addcoupon').post(protect,admin,addCoupon);
-router.route('/verify').post(verifyCoupon)
+router.route('/verify/:id').post(verifyCoupon)
 router.route('/list').post(protect,admin,couponList)
 router
     .route('/:id')
