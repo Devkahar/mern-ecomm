@@ -69,6 +69,10 @@ const verifyCoupon = (couponCode) => async dispatch =>{
             type: COUPON_VERIFY_SUCCESS,
             payload: data
         })
+        if(data){
+
+            localStorage.setItem('verifiedCoupoun',JSON.stringify(data));
+        }
     } catch (error) {
         const message =
         error.response && error.response.data.message

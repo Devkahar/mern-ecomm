@@ -32,7 +32,7 @@ const razorPay = async (req, res) =>{
   const currency = 'INR';
   console.log(process.env.RAZORPAY_KEY);
   try {
-    const response = await razorpay.orders.create({amount: amount*100,currency,receipt: `${order._id}`});
+    const response = await razorpay.orders.create({amount: parseInt(amount*100),currency,receipt: `${order._id}`});
     res.status(200).json({
       id: response.id,
       currency: response.currency,
@@ -41,7 +41,7 @@ const razorPay = async (req, res) =>{
     })
   } catch (error) {
     console.log(error);
-  }  
+  }
 }
 
 export{

@@ -1,7 +1,8 @@
 header{
-    background-color: #603813;
-    
-    
+    background-color: #222222;
+}
+.bg{
+    background-color: #222222;
 }
 .headerLinks > a{
     color: #FFC905 !important;

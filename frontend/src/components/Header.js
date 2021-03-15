@@ -19,12 +19,13 @@ const Header = () => {
 
   return (
     <header>
+      <Container>
       <Navbar bg='transprant' variant='dark' expand='lg' collapseOnSelect>
-        <Container>
+        <Container fluid >
           <LinkContainer to='/'>
             <Navbar.Brand>
             <img
-              src="https://happisips.com/wp-content/uploads/2021/02/Logo.png"
+              src="https://cdn.shopify.com/s/files/1/1893/6343/files/Logo_200x.png?v=1608123785"
               width="220"
               height="50"
               className="d-inline-block align-top"
@@ -34,28 +35,7 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='mr-auto ml-auto headerLinks'>
-            
-              <LinkContainer to='/about'>
-                <Nav.Link>
-                  About US
-                </Nav.Link>
-              </LinkContainer>
-            <LinkContainer to='/store'>
-                <Nav.Link>
-                  Store
-                </Nav.Link>
-              </LinkContainer>
-            <LinkContainer to='/blog'>
-                <Nav.Link>
-                  Blog
-                </Nav.Link>
-              </LinkContainer>
-              
-            </Nav>
             <Nav className='ml-auto headerLinks'>
-              
-              
               
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id='username' headerLinks>
@@ -69,7 +49,7 @@ const Header = () => {
               ) : (
                 <LinkContainer to='/login'>
                   <Nav.Link>
-                    <i className='fas fa-user'></i> LogIn
+                    <i className='fas fa-user'></i> 
                   </Nav.Link>
                 </LinkContainer>
               )}
@@ -99,6 +79,7 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      </Container>
     </header>
   )
 }

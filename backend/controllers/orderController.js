@@ -45,6 +45,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       const coupond = await Coupon.findById({_id: _coupon.couponID});
       if(coupond){
         couponDiscount = coupond.discount;
+        console.log("Coupon Discount: ", couponDiscount);
       }
       
     } catch (error) {
@@ -76,7 +77,11 @@ const addOrderItems = asyncHandler(async (req, res) => {
     const product = await Product.findById(e.product);
     orderItemsv[index].price = product.price;
   })
-  let totalPricev = orderItemsv.reduce((acc, item) => acc + item.price * item.qty, 0) * ((100-couponDiscount)/100)+wrapPrice;
+  let totalPricev = orderItemsv.reduce((acc, item) => acc + item.price * item.qty, 0);
+  if(totalPricev < 500){
+    totalPricev = totalPricev+50;
+  }
+  totalPricev = totalPricev * (1- couponDiscount/100)+wrapPrice;
   if (orderItems && orderItems.length === 0) {
     res.status(400)
     throw new Error('No order items')
@@ -147,6 +152,14 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
       order_id: req.body.order_id,
       update_time: Date.now(),
       email_address: req.body.email_address,
+    }
+    if(order.coupon.isCoupon){
+      const coupon = await Coupon.findById({_id:order.coupon.couponID})
+      if(coupon){
+        coupon.couponUsed = coupon.couponUsed+1;
+        const couponUpdate = await coupon.save();
+        console.log("Update",couponUpdate);
+      }
     }
     const updatedOrder = await order.save()
     res.json(updatedOrder)
