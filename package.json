@@ -27,7 +27,7 @@
     "url": "https://github.com/Devkahar/mern-ecomm/issues"
   },
   "homepage": "https://github.com/Devkahar/mern-ecomm#readme",
-  "dependencies": {
+  "dependencies":{
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
